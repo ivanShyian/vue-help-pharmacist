@@ -1,0 +1,87 @@
+@import "~normalize-scss/sass/normalize/import-now";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+@font-face {
+  font-family: "Avenir";
+  src: url("~@/assets/fonts/Avenir.ttf") format("truetype");
+}
+
+@mixin simpleButton($color: grey, $bg: white, $font-size: 2rem) {
+  button {
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    font-size: $font-size;
+    color: $color;
+    background: $bg;
+    border-radius: 6rem;
+    border: 0;
+    cursor: pointer;
+    transition: all ease 0.5s;
+  }
+  button:focus {
+    outline: none;
+  }
+  button:active {
+    transition: all ease 0.5s;
+    color: #98a0d0;
+  }
+}
+@mixin faGradient() {
+  li:first-child {
+    i {
+      background: linear-gradient(90deg, #D9D9D9 0%, #A1A1A1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  li:nth-child(2) {
+    i {
+      background: linear-gradient(63.53deg, #FD98BB 16.62%, #FFB2AD 83.38%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  li:last-child {
+    i {
+    background: linear-gradient(63.53deg, #FD98BB 16.62%, #FFB2AD 83.38%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+}
+html {
+  height: 100%;
+  font-size: 15px;
+}
+body {
+  height: 100vh;
+  overflow: hidden;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.container {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+.app__home {
+  height: 100%;
+  background-image: url("~@/assets/greetings/bg.png"), url("~@/assets/greetings/shutterstock.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.action-btn-blue {
+  background: linear-gradient(266.19deg, #8049C7 0%, #CA57FD 100%);
+  border-radius: 100px;
+}
+.action-btn-light-blue {
+  background: linear-gradient(266.19deg, #169AE4 0%, #0CC4FA 100%);
+  border-radius: 100px;
+}
+.action-btn-salad {
+  background: linear-gradient(90deg, #FFD748 0.02%, rgba(195, 199, 11, 0.96) 99.97%, #CAC6AB 99.98%, #D3E9E1 99.99%);
+  border-radius: 100px;
+}
