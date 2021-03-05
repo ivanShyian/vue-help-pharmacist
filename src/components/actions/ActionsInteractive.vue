@@ -1,7 +1,9 @@
 <template>
   <div class="actions__interactive interactive">
     <div class="interactive__content">
-      <app-person :user="currentUser"></app-person>
+      <vue-swing :config="config">
+        <app-person :user="user" ref="card"></app-person>
+      </vue-swing>
     </div>
     <div class="interactive__buttons">
       <button v-for="btn in params"
@@ -15,64 +17,56 @@
 
 <script>
 import AppPerson from '@/components/AppPerson'
+import VueSwing from 'vue-swing'
 
 export default {
-  components: { AppPerson },
   props: {
     params: {
       type: Array,
+      required: true
+    },
+    persons: {
+      type: Array,
+      required: true
+    },
+    counter: {
+      type: Number,
+      required: true
+    },
+    user: {
+      type: Object,
+      required: true
+    }
+  },
+  emits: {
+    'next-person': {
+      type: Function,
       required: true
     }
   },
   data() {
     return {
-      counter: 0,
-      persons: [
-        {
-          id: 0,
-          name: 'Марія',
-          age: 19,
-          img: 'mariya.png',
-          message: 'Бабуся приймає брендовий препарат від болю в суглобах, він допомагає,\n' +
-            ' але занадто дорогий. У Вас є якісний аналог з нижчою ціною? Якщо ні — давайте бренд.\n'
-        },
-        {
-          id: 1,
-          name: 'Степан',
-          age: 61,
-          img: 'stepan.png',
-          message: ' Спросоння відсунув гарячий чайник рукою та обпікся.' +
-            'У Вас всі ліки від опіків такі дорогі? Можна хороший препарат недорого?'
-        },
-        {
-          id: 2,
-          name: 'Любов',
-          age: 58,
-          img: 'luybov.png',
-          message: 'Лікар призначив препарат від артеріальної гіпертензії, а бренд дорого коштує. ' +
-            'Тому мені потрібен аналог з хорошою ефективністю та приємною ціною.'
-        },
-        {
-          id: 3,
-          name: 'Олександр',
-          age: 20,
-          img: 'oleksandr.png',
-          message: 'Порекомендуйте ефективний препарат від болю в горлі за розумну ціну.'
-        },
-        {
-          id: 4,
-          name: 'Ірина',
-          age: 55,
-          img: 'iryna.png',
-          message: 'У мене часто невралгії, лікар призначив вітаміни групи В. Мені потрібен якісний аналог за прийнятною ціною.'
-        }
-      ]
+      config: {
+        maxRotation: 80,
+        isThrowOut: this.dragend,
+        allowedDirections: [
+          VueSwing.Direction.UP,
+          VueSwing.Direction.LEFT,
+          VueSwing.Direction.RIGHT
+        ]
+      }
     }
   },
-  computed: {
-    currentUser() {
-      return this.persons[this.counter]
+  methods: {
+    dragend(...event) {
+      if (event[3] === 1) {
+        this.$emit('next-person')
+      }
     }
+  },
+  components: {
+    AppPerson,
+    VueSwing
   }
 }
 </script>
@@ -94,6 +88,7 @@ export default {
     align-items: center;
   }
   &__buttons {
+    z-index: 5;
     flex: 0 0 15%;
     display: flex;
     align-items: center;

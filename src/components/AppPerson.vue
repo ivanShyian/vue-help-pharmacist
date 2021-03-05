@@ -43,6 +43,7 @@ export default {
   }
   &__image {
     img {
+      pointer-events: none;
       width: 100%;
       height: auto;
     }

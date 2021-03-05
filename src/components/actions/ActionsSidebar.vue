@@ -15,7 +15,7 @@
     </div>
     <div class="sidebar__queue">
       <p>Осталось в очереди</p>
-      <span><b>14</b>/15</span>
+      <span><b>{{ peopleLeft }}</b>/{{ length }}</span>
     </div>
   </div>
 </template>
@@ -26,6 +26,19 @@ export default {
     params: {
       type: Array,
       required: true
+    },
+    length: {
+      type: Number,
+      required: true
+    },
+    counter: {
+      type: Number,
+      required: true
+    }
+  },
+  computed: {
+    peopleLeft() {
+      return this.length - this.counter
     }
   }
 }
@@ -34,6 +47,8 @@ export default {
 <style scoped lang="scss">
 @import "../../template";
 .sidebar {
+  overflow: hidden;
+  z-index: 5;
   &__buttons {
     display: flex;
     padding: 3rem .5rem 0 2rem;
