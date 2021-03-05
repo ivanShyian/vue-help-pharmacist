@@ -2,7 +2,7 @@
   <div class="actions__sidebar sidebar">
     <div class="sidebar__buttons">
       <div @click="$router.push('/')"><i class="fa fa-home"></i></div>
-      <div><i class="fas fa-sync"></i></div>
+      <div @click="$emit('refresh')"><i class="fas fa-sync"></i></div>
     </div>
     <div class="sidebar__params">
       <span>Параметры:</span>
@@ -15,7 +15,7 @@
     </div>
     <div class="sidebar__queue">
       <p>Осталось в очереди</p>
-      <span><b>{{ peopleLeft }}</b>/{{ length }}</span>
+      <span><b>{{ length }}</b>/{{ initial }}</span>
     </div>
   </div>
 </template>
@@ -31,14 +31,16 @@ export default {
       type: Number,
       required: true
     },
-    counter: {
+    initial: {
       type: Number,
-      required: true
+      required: false,
+      default: null
     }
   },
-  computed: {
-    peopleLeft() {
-      return this.length - this.counter
+  emits: {
+    refresh: {
+      type: Function,
+      required: true
     }
   }
 }

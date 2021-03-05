@@ -1,12 +1,15 @@
 <template>
   <div class="app__actions actions">
     <actions-sidebar :params="params"
-                     :counter="counter"
-                     :length="persons.length"></actions-sidebar>
-    <actions-interactive :counter="counter"
-                         @next-person="nextPerson"
-                         :params="params"
-                         :user="currentUser"></actions-interactive>
+                     :initial="initialLength"
+                     :length="length"
+                     @refresh="update = true"></actions-sidebar>
+    <actions-interactive :params="params"
+                         :people="persons"
+                         :update="update"
+                         @clear="update = false"
+                         @exact-length="length = $event"
+                         @next-card="nextCard"></actions-interactive>
   </div>
 </template>
 
@@ -14,13 +17,19 @@
 import ActionsSidebar from '@/components/actions/ActionsSidebar'
 import ActionsInteractive from '@/components/actions/ActionsInteractive'
 export default {
+  mounted() {
+    this.initialLength = this.persons.length
+    this.length = this.persons.length
+  },
   data() {
     return {
-      counter: 0,
+      initialLength: 0,
+      length: 0,
+      update: false,
       params: [
-        { id: 0, icon: 'fas fa-frown', param: 1, count: 0, className: 'action-btn-blue' },
-        { id: 1, icon: 'fas fa-smile', param: 2, count: 0, className: 'action-btn-light-blue' },
-        { id: 2, icon: 'fas fa-heart', param: 3, count: 0, className: 'action-btn-salad' }
+        { id: 0, icon: 'fas fa-frown', param: 1, count: 0, className: 'action-btn-blue', action: 'left' },
+        { id: 1, icon: 'fas fa-smile', param: 2, count: 0, className: 'action-btn-light-blue', action: 'up' },
+        { id: 2, icon: 'fas fa-heart', param: 3, count: 0, className: 'action-btn-salad', action: 'right' }
       ],
       persons: [
         {
@@ -60,29 +69,45 @@ export default {
           age: 55,
           img: 'iryna.png',
           message: 'У мене часто невралгії, лікар призначив вітаміни групи В. Мені потрібен якісний аналог за прийнятною ціною.'
+        },
+        {
+          id: 5,
+          name: 'Инна',
+          age: 19,
+          img: 'mariya.png',
+          message: 'Бабуся приймає брендовий препарат від болю в суглобах, він допомагає,\n' +
+            ' але занадто дорогий. У Вас є якісний аналог з нижчою ціною? Якщо ні — давайте бренд.\n'
+        },
+        {
+          id: 6,
+          name: 'Инна',
+          age: 19,
+          img: 'mariya.png',
+          message: 'Бабуся приймає брендовий препарат від болю в суглобах, він допомагає,\n' +
+            ' але занадто дорогий. У Вас є якісний аналог з нижчою ціною? Якщо ні — давайте бренд.\n'
         }
       ]
     }
   },
-  computed: {
-    lastPerson() {
-      return this.counter + 1 === this.persons.length
-    },
-    currentUser() {
-      return this.persons[this.counter]
-    }
-  },
   methods: {
-    nextPerson() {
-      if (!this.lastPerson) {
-        this.counter++
-      } else {
-        this.$router.push('/final')
-        this.counter = 0
+    nextCard({ length, direction }) {
+      this.length = length
+      this.params = this.params.map(el => {
+        if (direction.toLowerCase().includes(el.action)) {
+          el.count++
+          return el
+        }
+        return el
+      })
+      if (!this.length) {
+        this.$store.dispatch('setResult', this.params)
       }
     }
   },
-  components: { ActionsSidebar, ActionsInteractive }
+  components: {
+    ActionsSidebar,
+    ActionsInteractive
+  }
 }
 </script>
 

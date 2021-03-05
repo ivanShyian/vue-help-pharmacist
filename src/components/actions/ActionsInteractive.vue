@@ -1,14 +1,22 @@
 <template>
   <div class="actions__interactive interactive">
     <div class="interactive__content">
-      <vue-swing :config="config">
-        <app-person :user="user" ref="card"></app-person>
-      </vue-swing>
+        <ul class="interactive__people">
+          <vue-swing :config="config"
+                     ref="vueswing"
+                     @throwout="onThrowout">
+            <app-person v-for="user in users"
+                        :key="user.id"
+                        :user="user"
+            ></app-person>
+          </vue-swing>
+        </ul>
     </div>
     <div class="interactive__buttons">
       <button v-for="btn in params"
               :key="btn.id"
               :class="btn.className"
+              @click="swing(btn.action)"
       >Препарат {{ btn.param }}
       </button>
     </div>
@@ -18,6 +26,8 @@
 <script>
 import AppPerson from '@/components/AppPerson'
 import VueSwing from 'vue-swing'
+import { directionChecker } from '@/utils/direction'
+import { swingConfig } from '@/utils/swing-config'
 
 export default {
   props: {
@@ -25,42 +35,74 @@ export default {
       type: Array,
       required: true
     },
-    persons: {
-      type: Array,
-      required: true
-    },
-    counter: {
-      type: Number,
-      required: true
-    },
-    user: {
+    people: {
       type: Object,
       required: true
+    },
+    update: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   emits: {
-    'next-person': {
+    'exact-length': {
       type: Function,
+      required: false
+    },
+    'next-card': {
+      type: Object,
       required: true
+    },
+    clear: {
+      type: Boolean,
+      required: false
+    }
+  },
+  watch: {
+    update(newValue) {
+      if (newValue) {
+        this.users = this.people
+        this.$emit('exact-length', this.users.length)
+        this.$emit('clear')
+      }
     }
   },
   data() {
     return {
-      config: {
-        maxRotation: 80,
-        isThrowOut: this.dragend,
-        allowedDirections: [
-          VueSwing.Direction.UP,
-          VueSwing.Direction.LEFT,
-          VueSwing.Direction.RIGHT
-        ]
-      }
+      byButton: false,
+      users: this.people,
+      config: swingConfig
     }
   },
   methods: {
-    dragend(...event) {
-      if (event[3] === 1) {
-        this.$emit('next-person')
+    onThrowout({ target, throwDirection }) {
+      if (this.byButton) {
+        setTimeout(() => {
+          this.throwCard(target, throwDirection)
+        }, 200)
+      } else {
+        this.throwCard(target, throwDirection)
+      }
+    },
+    swing(direction) {
+      const coordinates = directionChecker(direction)
+      this.byButton = true
+      const cards = this.$refs.vueswing.cards
+      cards[cards.length - 1].throwOut(
+        coordinates.x,
+        coordinates.y
+      )
+      this.byButton = false
+    },
+    throwCard(target, direction) {
+      this.users = this.users.filter(e => e.id !== +target.id)
+      this.$emit('next-card', {
+        length: this.users.length,
+        direction: direction.toString()
+      })
+      if (!this.users.length) {
+        return this.$router.push('/final')
       }
     }
   },
@@ -86,6 +128,19 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  &__people {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    div:first-child {
+      width: 100%;
+      height: 100%;
+      li {
+        overflow: hidden;
+      }
+    }
   }
   &__buttons {
     z-index: 5;

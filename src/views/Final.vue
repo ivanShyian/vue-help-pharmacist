@@ -1,20 +1,12 @@
 <template>
   <div class="app__final final">
     <div class="final__content final-content">
-      <div @click="$router.push('/')"><i class="fa fa-home"></i></div>
+      <div class="final-content__home-btn" @click="$router.push('/')"><i class="fa fa-home"></i></div>
       <div class="final-content__elements">
-        <ul class="final-content__results">
-          <li>
-            <span>100%</span>
-            <span>Препарат 1</span>
-          </li>
-          <li>
-            <span>100%</span>
-            <span>Препарат 2</span>
-          </li>
-          <li>
-            <span>100%</span>
-            <span>Препарат 3</span>
+        <ul class="final-content__results" v-if="results.length">
+          <li v-for="res in results" :key="res">
+            <span>{{ res.value }}%</span>
+            <span>Препарат {{ res.name }}</span>
           </li>
         </ul>
         <div class="final-content__text">
@@ -23,7 +15,7 @@
           <p>Это тестовое задание, так что не будем углубляться в глубины проблем фармацевтов.</p>
         </div>
       </div>
-      <button>Попробовать еще</button>
+      <button @click="$router.push('/actions')">Попробовать еще</button>
     </div>
     <div class="final__picture">
       <img src="../assets/final/final.jpg" alt="">
@@ -32,7 +24,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  computed: {
+    results() {
+      return this.$store.getters.result
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -63,7 +61,7 @@ export default {}
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  div:first-child {
+  &__home-btn {
     display: flex;
     align-self: flex-start;
     flex-grow: 0;
@@ -73,6 +71,7 @@ export default {}
     border-radius: 50%;
     background: linear-gradient(63.53deg, #2D8550 16.62%, #5E6EC2 83.38%);
     color: white;
+    cursor: pointer;
   }
   &__elements {
     display: flex;
