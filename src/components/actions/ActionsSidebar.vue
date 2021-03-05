@@ -1,7 +1,7 @@
 <template>
   <div class="actions__sidebar sidebar">
     <div class="sidebar__buttons">
-      <div><i class="fa fa-home"></i></div>
+      <div @click="$router.push('/')"><i class="fa fa-home"></i></div>
       <div><i class="fas fa-sync"></i></div>
     </div>
     <div class="sidebar__params">
@@ -45,6 +45,7 @@ export default {
       padding: 1rem;
       border-radius: 50%;
       margin-right: 1.5rem;
+      cursor: pointer;
       @media (min-width: 2000px) {
         padding: 2rem;
       }

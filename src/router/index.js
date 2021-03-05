@@ -10,6 +10,16 @@ const routes = [
     path: '/actions',
     name: 'Actions',
     component: () => import('../views/Actions.vue')
+  },
+  {
+    path: '/final',
+    name: 'Final',
+    component: () => import('../views/Final.vue')
+  },
+  {
+    path: '/:notFind(.*)',
+    name: 'notFind',
+    component: () => import('../views/NotFind')
   }
 ]
 
