@@ -1,3 +1,8 @@
+const DIRECTION_MAP = {
+  'Symbol(LEFT)': 1,
+  'Symbol(UP)': 2,
+  'Symbol(RIGHT)': 3
+}
 export function directionChecker(direction) {
   const coordinates = {}
   if (direction === 'left') {
@@ -11,4 +16,8 @@ export function directionChecker(direction) {
     coordinates.y = -600
   }
   return coordinates
+}
+
+export function directionType(direction) {
+  return DIRECTION_MAP[direction.toString()]
 }

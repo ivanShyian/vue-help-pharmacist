@@ -7,10 +7,14 @@
       <span>{{ user.name }} {{ correctAgeWord }}</span>
       <p>{{ user.message }}</p>
     </div>
+    <app-card-label :opacity="calcOpacity"
+                    :type="type"
+    ></app-card-label>
   </li>
 </template>
 
 <script>
+import AppCardLabel from '@/components/ui/AppCardLabel'
 import { secondWordAfterAge } from '@/utils/age'
 
 export default {
@@ -18,12 +22,26 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    opacity: {
+      type: Object,
+      required: false
+    },
+    type: {
+      type: Number,
+      required: false
     }
   },
   computed: {
     correctAgeWord() {
       return secondWordAfterAge(this.user.age)
+    },
+    calcOpacity() {
+      return +Object.keys(this.opacity) === this.user.id ? this.opacity[this.user.id] : 0
     }
+  },
+  components: {
+    AppCardLabel
   }
 }
 </script>

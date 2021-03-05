@@ -89,6 +89,16 @@ export default {
       ]
     }
   },
+  watch: {
+    update(newV) {
+      if (newV) {
+        this.params = this.params.map(el => {
+          el.count = 0
+          return el
+        })
+      }
+    }
+  },
   methods: {
     nextCard({ length, direction }) {
       this.length = length

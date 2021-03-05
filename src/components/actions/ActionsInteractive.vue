@@ -4,8 +4,12 @@
         <ul class="interactive__people">
           <vue-swing :config="config"
                      ref="vueswing"
+                     @dragmove="dragMove"
+                     @dragend="dragEnd"
                      @throwout="onThrowout">
             <app-person v-for="user in users"
+                        :opacity="opacity"
+                        :type="paramType"
                         :key="user.id"
                         :user="user"
             ></app-person>
@@ -24,10 +28,10 @@
 </template>
 
 <script>
+import { directionChecker, directionType } from '@/utils/direction'
+import { swingConfig } from '@/utils/swing-config'
 import AppPerson from '@/components/AppPerson'
 import VueSwing from 'vue-swing'
-import { directionChecker } from '@/utils/direction'
-import { swingConfig } from '@/utils/swing-config'
 
 export default {
   props: {
@@ -63,6 +67,8 @@ export default {
     update(newValue) {
       if (newValue) {
         this.users = this.people
+        this.opacity = {}
+        this.paramType = 0
         this.$emit('exact-length', this.users.length)
         this.$emit('clear')
       }
@@ -70,18 +76,25 @@ export default {
   },
   data() {
     return {
-      byButton: false,
+      config: swingConfig,
       users: this.people,
-      config: swingConfig
+      byButton: false,
+      paramType: 0,
+      opacity: {}
     }
   },
   methods: {
     onThrowout({ target, throwDirection }) {
       if (this.byButton) {
+        this.opacity = {
+          [target.id]: 1
+        }
+        this.paramType = directionType(throwDirection)
         setTimeout(() => {
           this.throwCard(target, throwDirection)
         }, 200)
       } else {
+        this.paramType = directionType(throwDirection)
         this.throwCard(target, throwDirection)
       }
     },
@@ -104,6 +117,19 @@ export default {
       if (!this.users.length) {
         return this.$router.push('/final')
       }
+    },
+    dragMove({ target, throwOutConfidence, throwDirection }) {
+      if (throwOutConfidence > 0.5 && throwDirection.toString() !== 'Symbol(INVALID)') {
+        this.paramType = directionType(throwDirection)
+        this.opacity = {
+          [target.id]: throwOutConfidence
+        }
+      } else {
+        this.opacity = {}
+      }
+    },
+    dragEnd() {
+      this.opacity = {}
     }
   },
   components: {

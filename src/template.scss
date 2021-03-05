@@ -85,3 +85,15 @@ body {
   background: linear-gradient(90deg, #FFD748 0.02%, rgba(195, 199, 11, 0.96) 99.97%, #CAC6AB 99.98%, #D3E9E1 99.99%);
   border-radius: 100px;
 }
+.app-label.blue {
+  border: .5rem solid #8049C7;
+  color: #8049C7;
+}
+.app-label.lightblue {
+  border: .5rem solid #169AE4;
+  color: #8049C7;
+}
+.app-label.orange {
+  border: .5rem solid rgba(195, 199, 11, 0.96);
+  color: rgba(195, 199, 11, 0.96);
+}
