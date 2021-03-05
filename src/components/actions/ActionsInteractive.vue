@@ -20,6 +20,7 @@
       <button v-for="btn in params"
               :key="btn.id"
               :class="btn.className"
+              :disabled="byButton"
               @click="swing(btn.action)"
       >Препарат {{ btn.param }}
       </button>
@@ -92,6 +93,7 @@ export default {
         this.paramType = directionType(throwDirection)
         setTimeout(() => {
           this.throwCard(target, throwDirection)
+          this.byButton = false
         }, 200)
       } else {
         this.paramType = directionType(throwDirection)
@@ -106,7 +108,6 @@ export default {
         coordinates.x,
         coordinates.y
       )
-      this.byButton = false
     },
     throwCard(target, direction) {
       this.users = this.users.filter(e => e.id !== +target.id)
