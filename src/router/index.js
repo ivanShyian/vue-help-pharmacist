@@ -1,20 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import Final from '../views/Final'
+import Actions from '../views/Actions'
+import Home from '../views/Home'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue')
+    component: Home
   },
   {
     path: '/actions',
     name: 'Actions',
-    component: () => import('../views/Actions.vue')
+    component: Actions
   },
   {
     path: '/final',
     name: 'Final',
-    component: () => import('../views/Final.vue')
+    component: Final
   },
   {
     path: '/:notFind(.*)',
